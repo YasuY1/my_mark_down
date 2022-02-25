@@ -8,12 +8,12 @@ window.addEventListener('load',()=>{
     inputArea.focus();
 });
 
-/////
-inputArea.addEventListener('keypress',keyDivider);
+inputArea.addEventListener('keypress',keyDivider,{once:true});
 
 function keyDivider(e){
     if(inputArea.value === '' && e.key === 'Enter'){
         outputArea.innerHTML += '<br>';
+        inputArea.addEventListener('keypress',keyDivider,{once:true});
     }
     if(inputArea.value === '' && e.key !== 'Enter'){
         inputArea.addEventListener('input',tagSellector);
@@ -21,78 +21,72 @@ function keyDivider(e){
 }
 
 function tagSellector(){
-    if(inputArea.value === 'h1 '){
-        createTag('h1')
+        switch(inputArea.value){
+            case 'h1 ':
+                createTag('h1');
+                break;
+            case 'h2 ':
+                createTag('h2');
+                break;
+            case 'h3 ':
+                createTag('h3');
+                break;
+            default:
+                if(!previewArea.hasChildNodes()){
+                    createP();
+                }
+                break;
+        }
     }
-    if(inputArea.value === 'h2 '){
-        createTag('h2')
-    }
-}
+
 
 function createTag(str){
     const tag = document.createElement(str);
     previewArea.appendChild(tag);
-    inputArea.value = null;
+    inputArea.value = '';
+    previewArea.removeChild(previewArea.firstElementChild);
     inputArea.addEventListener('input',insertText);
 }
 
+function createP(){
+    const p = document.createElement('p');
+    previewArea.appendChild(p);
+    p.textContent = inputArea.value;
+    inputArea.addEventListener('input',insertText);
+}
+
+
+function createNextContainer(){
+    const elm = previewArea.lastElementChild;
+    elm.insertAdjacentText('beforeend','');
+    inputArea.addEventListener('input',insertNextText);
+}
+
+
 function insertText(){
     previewArea.lastElementChild.textContent = inputArea.value;
-    inputArea.addEventListener('keypress',pressEnter);
-}
-
-
-
-function insertP(){
-    const tag = document.createElement('p');
-    previewArea.appendChild(tag);
-    inputArea.removeEventListener('input',insertP);
-    previewArea.firstElementChild.textContent = inputArea.value;
-    inputArea.addEventListener('input',insertFirstText);
-}
-
-
-//クラス化
-function insertFirstText(){
-    const elm = previewArea.firstElementChild;
-    elm.textContent = inputArea.value;
-    inputArea.addEventListener('keypress',shiftEnterAction);
+    inputArea.addEventListener('keypress',pressEnter,{once:true});
 }
 
 function insertNextText(){
-    const elm = previewArea.firstElementChild;
-    elm.insertAdjacentText('beforeend',inputArea.value);
-    inputArea.value = null;
-    inputArea.addEventListener('keypress',shiftEnterAgain);
+    const elm = previewArea.lastElementChild;
+    elm.lastChild.textContent = inputArea.value;
+    inputArea.addEventListener('keypress',pressEnter,{once:true});
 }
-
-function shiftEnterAction(e){
-    if(e.key === 'Enter' && e.shiftKey === true){
-        inputArea.removeEventListener('input',insertFirstText);
-        inputArea.value = null;
-        const elm = previewArea.firstElementChild;
-        elm.innerHTML = elm.innerHTML + '<br>';
-        inputArea.addEventListener('input',insertNextText);
-    }
-}
-
-function shiftEnterAgain(e){
-    if(e.key === 'Enter' && e.shiftKey === true){
-        const elm = previewArea.firstElementChild;
-        elm.innerHTML = elm.innerHTML;
-        inputArea.addEventListener('input',insertNextText);
-    }
-}
-
 
 
 function pressEnter(e){
     if(e.key === 'Enter' && e.shiftKey === false){
         outputArea.insertAdjacentHTML('beforeend',previewArea.innerHTML);
-        while(previewArea.firstElementChild){
-            previewArea.removeChild(previewArea.firstChild);
-            inputArea.value = null;
-        }
+        previewArea.innerHTML = '';
+        inputArea.value = '';
+        inputArea.addEventListener('keypress',keyDivider,{once:true});
+    }
+    if(e.key === 'Enter' && e.shiftKey === true){
+        inputArea.value = '';
+        previewArea.firstElementChild.insertAdjacentHTML('beforeend','<br>');
+        inputArea.removeEventListener('input',insertText);//insertTextのリムーブ
+        inputArea.addEventListener('input',createNextContainer,{once:true});
     }
 }
-// 単一行のエラー処理
+
