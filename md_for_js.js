@@ -1,27 +1,28 @@
 'use strict';
 
-const inputArea = document.getElementById('inputArea');
-const previewArea = document.getElementById('previewArea');
+const input = document.getElementById('input');
+const preview = document.getElementById('preview');
 const outputArea = document.getElementById('outputArea');
 
-window.addEventListener('load',()=>{
-    inputArea.focus();
+
+document.addEventListener('click',()=>{
+    input.focus();
 });
 
-inputArea.addEventListener('keypress',keyDivider,{once:true});
+input.addEventListener('keypress',keyDivider,{once:true});
 
 function keyDivider(e){
-    if(inputArea.value === '' && e.key === 'Enter'){
+    if(input.value === '' && e.key === 'Enter'){
         outputArea.innerHTML += '<br>';
-        inputArea.addEventListener('keypress',keyDivider,{once:true});
+        input.addEventListener('keypress',keyDivider,{once:true});
     }
-    if(inputArea.value === '' && e.key !== 'Enter'){
-        inputArea.addEventListener('input',tagSellector);
+    if(input.value === '' && e.key !== 'Enter'){
+        input.addEventListener('input',tagSellector);
     }
 }
 
 function tagSellector(){
-        switch(inputArea.value){
+        switch(input.value){
             case 'h1 ':
                 createTag('h1');
                 break;
@@ -32,9 +33,7 @@ function tagSellector(){
                 createTag('h3');
                 break;
             default:
-                if(!previewArea.hasChildNodes()){
-                    createP();
-                }
+                directInsert();
                 break;
         }
     }
@@ -42,51 +41,45 @@ function tagSellector(){
 
 function createTag(str){
     const tag = document.createElement(str);
-    previewArea.appendChild(tag);
-    inputArea.value = '';
-    previewArea.removeChild(previewArea.firstElementChild);
-    inputArea.addEventListener('input',insertText);
+    preview.appendChild(tag);
+    input.value = '';
+    preview.removeChild(preview.firstElementChild);
+    input.addEventListener('input',insertText);
 }
 
-function createP(){
-    const p = document.createElement('p');
-    previewArea.appendChild(p);
-    p.textContent = inputArea.value;
-    inputArea.addEventListener('input',insertText);
+function directInsert(){
+    input.addEventListener('input',insertText);
 }
-
 
 function createNextContainer(){
-    const elm = previewArea.lastElementChild;
+    const elm = preview.lastElementChild;
     elm.insertAdjacentText('beforeend','');
-    inputArea.addEventListener('input',insertNextText);
+    input.addEventListener('input',insertNextText);
 }
 
-
 function insertText(){
-    previewArea.lastElementChild.textContent = inputArea.value;
-    inputArea.addEventListener('keypress',pressEnter,{once:true});
+    preview.lastElementChild.textContent = input.value;
+    input.addEventListener('keypress',pressEnter,{once:true});
 }
 
 function insertNextText(){
-    const elm = previewArea.lastElementChild;
-    elm.lastChild.textContent = inputArea.value;
-    inputArea.addEventListener('keypress',pressEnter,{once:true});
+    const elm = preview.lastElementChild;
+    elm.lastChild.textContent = input.value;
+    input.addEventListener('keypress',pressEnter,{once:true});
 }
-
 
 function pressEnter(e){
     if(e.key === 'Enter' && e.shiftKey === false){
-        outputArea.insertAdjacentHTML('beforeend',previewArea.innerHTML);
-        previewArea.innerHTML = '';
-        inputArea.value = '';
-        inputArea.addEventListener('keypress',keyDivider,{once:true});
+        outputArea.insertAdjacentHTML('beforeend',preview.innerHTML);
+        preview.innerHTML = '<p></p>';
+        input.value = '';
+        input.addEventListener('keypress',keyDivider,{once:true});
     }
     if(e.key === 'Enter' && e.shiftKey === true){
-        inputArea.value = '';
-        previewArea.firstElementChild.insertAdjacentHTML('beforeend','<br>');
-        inputArea.removeEventListener('input',insertText);//insertTextのリムーブ
-        inputArea.addEventListener('input',createNextContainer,{once:true});
+        input.value = '';
+        preview.firstElementChild.insertAdjacentHTML('beforeend','<br>');
+        input.removeEventListener('input',insertText);
+        input.addEventListener('input',createNextContainer,{once:true});
     }
 }
 

@@ -8,13 +8,15 @@
     <style>
         #previewArea {border:1px solid #000; display: inline-block;}
         h1,h2,h3,p {margin: 0;}
-        .inputArea {z-index: 0;}
+        input {z-index: 0; opacity: 0;}
     </style>
 </head>
 <body>
-    <input id="inputArea">
-    <div id="previewArea"></div>
+    <input id="input">
     <div id="outputArea"></div>
+    <div id="preview">
+        <p></p>
+    </div>
     <script src="./md_for_js.js"></script>
 </body>
 </html>
