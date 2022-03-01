@@ -1,7 +1,7 @@
 'use strict';
 
-export const tagSellector = function(){
-    switch(inputArea.value){
+export function tagSellector(){
+    switch(input.value){
         case 'h1 ':
             createTag('h1');
             break;
@@ -12,9 +12,7 @@ export const tagSellector = function(){
             createTag('h3');
             break;
         default:
-            if(!previewArea.hasChildNodes()){
-                createP();
-            }
+            directInsert();
             break;
     }
 }

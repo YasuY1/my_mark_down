@@ -1,16 +1,27 @@
 'use strict';
+// import {tagSellector} from "./tagSellctModule.js";
+// ＊＊切り出しは後ほど＊＊
 
+// イベントエリアの定義
 const input = document.getElementById('input');
 const preview = document.getElementById('preview');
 const outputArea = document.getElementById('outputArea');
 
+// ユーザがクリックをしたのかバックスペースを押したのか？
+// getEventType();
 
+// 最初のアクションの中身
 document.addEventListener('click',()=>{
     input.focus();
+    input.addEventListener('keydown',keyDivider,{once:true});
+},{once:true});
+document.addEventListener('keydown',(e)=>{
+    if(e.key === 'Backspace' && input.value === '' && outputArea.innerHTML !== ''){
+        pressBackspace();
+    }
 });
 
-input.addEventListener('keypress',keyDivider,{once:true});
-
+// エンターなら改行。それ以外ではコマンド入力
 function keyDivider(e){
     if(input.value === '' && e.key === 'Enter'){
         outputArea.innerHTML += '<br>';
@@ -21,22 +32,23 @@ function keyDivider(e){
     }
 }
 
+// 実際のコマンド入力
 function tagSellector(){
-        switch(input.value){
-            case 'h1 ':
-                createTag('h1');
-                break;
-            case 'h2 ':
-                createTag('h2');
-                break;
-            case 'h3 ':
-                createTag('h3');
-                break;
-            default:
-                directInsert();
-                break;
-        }
+    switch(input.value){
+        case 'h1 ':
+            createTag('h1');
+            break;
+        case 'h2 ':
+            createTag('h2');
+            break;
+        case 'h3 ':
+            createTag('h3');
+            break;
+        default:
+            directInsert();
+            break;
     }
+}
 
 
 function createTag(str){
@@ -68,6 +80,7 @@ function insertNextText(){
     input.addEventListener('keypress',pressEnter,{once:true});
 }
 
+// テキスト入力後のエンターキーの挙動
 function pressEnter(e){
     if(e.key === 'Enter' && e.shiftKey === false){
         outputArea.insertAdjacentHTML('beforeend',preview.innerHTML);
@@ -83,3 +96,10 @@ function pressEnter(e){
     }
 }
 
+// バックスペースキーの挙動 => OK(input空欄時BSエラー)
+function pressBackspace(){
+    input.value = outputArea.lastElementChild.textContent;
+    outputArea.removeChild(outputArea.lastElementChild);
+}
+
+// 見出しタグ入力時、shift + ↑ or ↓ 見出しの入れ替え
