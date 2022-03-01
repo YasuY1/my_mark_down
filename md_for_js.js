@@ -7,10 +7,7 @@ const input = document.getElementById('input');
 const preview = document.getElementById('preview');
 const outputArea = document.getElementById('outputArea');
 
-// ユーザがクリックをしたのかバックスペースを押したのか？
-// getEventType();
-
-// 最初のアクションの中身
+// 最初のアクションの中身 (ユーザがクリックをしたのかバックスペースを押したのか？)
 document.addEventListener('click',()=>{
     input.focus();
     input.addEventListener('keydown',keyDivider,{once:true});
@@ -96,7 +93,7 @@ function pressEnter(e){
     }
 }
 
-// バックスペースキーの挙動 => OK(input空欄時BSエラー)
+// バックスペースキーの挙動 => OK but (input空欄時BSエラー)
 function pressBackspace(){
     input.value = outputArea.lastElementChild.textContent;
     outputArea.removeChild(outputArea.lastElementChild);
