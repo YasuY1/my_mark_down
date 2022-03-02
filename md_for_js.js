@@ -93,8 +93,11 @@ function pressEnter(e){
     }
 }
 
-// バックスペースキーの挙動 => OK but (input空欄時BSエラー)
+// バックスペースキーの挙動
 function pressBackspace(){
+    if(outputArea.childElementCount === 0){
+        return false;
+    }
     input.value = outputArea.lastElementChild.textContent;
     outputArea.removeChild(outputArea.lastElementChild);
 }
