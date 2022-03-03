@@ -42,42 +42,12 @@ function tagSellector(){
             createTag('h3');
             break;
         default:
-            directInsert();
+            insertText();
             break;
     }
 }
 
-
-function createTag(str){
-    const tag = document.createElement(str);
-    preview.appendChild(tag);
-    input.value = '';
-    preview.removeChild(preview.firstElementChild);
-    input.addEventListener('input',insertText);
-}
-
-function directInsert(){
-    input.addEventListener('input',insertText);
-}
-
-function createNextContainer(){
-    const elm = preview.lastElementChild;
-    elm.insertAdjacentText('beforeend','');
-    input.addEventListener('input',insertNextText);
-}
-
-function insertText(){
-    preview.lastElementChild.textContent = input.value;
-    input.addEventListener('keypress',pressEnter,{once:true});
-}
-
-function insertNextText(){
-    const elm = preview.lastElementChild;
-    elm.lastChild.textContent = input.value;
-    input.addEventListener('keypress',pressEnter,{once:true});
-}
-
-// テキスト入力後のエンターキーの挙動
+// テキスト入力後のエンターキーの挙動 
 function pressEnter(e){
     if(e.key === 'Enter' && e.shiftKey === false){
         outputArea.insertAdjacentHTML('beforeend',preview.innerHTML);
@@ -86,10 +56,10 @@ function pressEnter(e){
         input.addEventListener('keypress',keyDivider,{once:true});
     }
     if(e.key === 'Enter' && e.shiftKey === true){
-        input.value = '';
         preview.firstElementChild.insertAdjacentHTML('beforeend','<br>');
-        input.removeEventListener('input',insertText);
-        input.addEventListener('input',createNextContainer,{once:true});
+        input.value = '';
+        input.removeEventListener('input',tagSellector);
+        createNextContainer();
     }
 }
 
@@ -103,3 +73,29 @@ function pressBackspace(){
 }
 
 // 見出しタグ入力時、shift + ↑ or ↓ 見出しの入れ替え
+
+
+//関数
+function createTag(str){
+    const tag = document.createElement(str);
+    preview.appendChild(tag);
+    input.value = '';
+    preview.removeChild(preview.firstElementChild);
+    input.addEventListener('input',insertText);
+}
+
+function createNextContainer(){
+    preview.firstElementChild.insertAdjacentText('beforeend','');
+    input.addEventListener('input',insertNextText);
+}
+
+function insertText(){// )1
+    preview.firstElementChild.textContent = input.value;
+    input.addEventListener('keypress',pressEnter,{once:true});
+}
+
+function insertNextText(){//最初から1
+    const elm = preview.firstElementChild;
+    elm.lastChild.textContent = input.value;
+    input.addEventListener('keypress',pressEnter);
+}
