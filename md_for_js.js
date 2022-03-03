@@ -1,4 +1,3 @@
-'use strict';
 // import {tagSellector} from "./tagSellctModule.js";
 // ＊＊切り出しは後ほど＊＊
 
@@ -47,7 +46,7 @@ function tagSellector(){
     }
 }
 
-// テキスト入力後のエンターキーの挙動 
+// テキスト入力後のエンターキーの挙動
 function pressEnter(e){
     if(e.key === 'Enter' && e.shiftKey === false){
         outputArea.insertAdjacentHTML('beforeend',preview.innerHTML);
@@ -58,7 +57,7 @@ function pressEnter(e){
     if(e.key === 'Enter' && e.shiftKey === true){
         preview.firstElementChild.insertAdjacentHTML('beforeend','<br>');
         input.value = '';
-        input.removeEventListener('input',tagSellector);
+        // input.removeEventListener('input',tagSellector);
         createNextContainer();
     }
 }
